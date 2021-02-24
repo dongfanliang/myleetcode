@@ -1,5 +1,9 @@
 package tree
 
+import (
+	"container/list"
+)
+
 type TreeNode struct {
 	Val   int
 	Left  *TreeNode
@@ -70,3 +74,38 @@ func postorderD(root *TreeNode) []int {
 }
 
 // 迭代方式
+
+// 层序遍历
+func levelOrder(root *TreeNode) [][]int {
+	res := [][]int{}
+	if root == nil {
+		return res
+	}
+
+	queue := list.New()
+	queue.PushBack(root)
+	count := queue.Len()
+
+	for count != 0 {
+		levelRes := []int{}
+
+		for i := 0; i < count; i++ {
+			item := queue.Front()
+			queue.Remove(item)
+
+			node := item.Value.(*TreeNode)
+			levelRes = append(levelRes, node.Val)
+
+			if node.Left != nil {
+				queue.PushBack(node.Left)
+			}
+			if node.Right != nil {
+				queue.PushBack(node.Right)
+			}
+		}
+
+		count = queue.Len()
+		res = append(res, levelRes)
+	}
+	return res
+}
